@@ -7,29 +7,21 @@ def buildArmy():
         hero.summon(aliado)
     
 def commandArmy():
-    friends = hero.built
+    friends = hero.findFriends()
     enemies = hero.findEnemies()
-    
-    points = hero.getControlPoints()
-    my_points = [points[5]] * 5 + [points[4]] *5 + [points[3], points[2], points[0], points[1]]
+    points = hero.getControlPointsMap()
+ 
     
     for i, friend in enumerate(friends):
         if friend.health <= 0 or friend.type == "arrow-tower":
             continue
   
-        point = my_points[i%len(my_points)]
-        if friend.type == "archer":
-            point = my_points[3]
-            #hero_vec = new Vector(hero.pos.x, hero.pos.y)
-            #vector = new Vector(-3,-3)
-            #point = Vector.add(hero_vec,vector)
+        point = points["center"]
   
         enemy = friend.findNearest(enemies)
     
-        if hero.time < 90:
-            hero.command(friend, "defend", point.pos)
-        else:
-            hero.command(friend, "attack", enemy )
+ 
+        hero.command(friend, "attack", enemy )
     
 def controlHero():
     enemies = hero.findEnemies()
@@ -37,7 +29,7 @@ def controlHero():
     
     nearestEnemy = hero.findNearest(enemies)
 
-    if ennearestEnemnearestEnemyyemy:
+    if nearestEnemy:
         distance = hero.distanceTo(nearestEnemy)
 
         readyToStomp = hero.isReady("stomp")
@@ -49,7 +41,7 @@ def controlHero():
         elif readyToStomp and distance < 15:
             hero.stomp()
         elif readyToThrow and distance < hero.throwRange:
-            hero.throwPos(enemy.pos)
+            hero.throwPos(nearestEnemy.pos)
         else:
             hero.attack(nearestEnemy)
         
